@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Classroom - Dashboard</title>
+    
+    <link rel="preconnect" href="https://playgama.com">
+    <link rel="dns-prefetch" href="https://playgama.com">
+
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #fff; }
+
+        /* --- MODE 1: SCHOOL MODE (The Shield) --- */
+        #school-mode {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+        }
+        .header { background: #fff; border-bottom: 1px solid #ddd; padding: 15px 30px; display: flex; align-items: center; }
+        .content { padding: 40px; color: #3c4043; }
+        .assignment-box { background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px; max-width: 600px; }
+
+        /* --- MODE 2: GAMING MODE (The Money) --- */
+        #gaming-mode {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 9999;
+        }
+        iframe { width: 100%; height: 100%; border: none; outline: none; }
+
+        /* THE SECRET SWITCHER (Invisible to Teachers) */
+        #mode-toggle {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            width: 10px;
+            height: 10px;
+            background: rgba(0,0,0,0.02); /* Almost invisible */
+            cursor: pointer;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mode-toggle" onclick="toggleMode()" title="Switch System"></div>
+
+    <div id="school-mode">
+        <div class="header">
+            <img src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24dp.svg" alt="Google">
+            <span style="margin-left:10px; font-size: 1.2rem; color: #5f6368;">Classroom</span>
+        </div>
+        <div class="content">
+            <h2>Current Assignments</h2>
+            <div class="assignment-box">
+                <h3 style="color: #1a73e8;">Biology: DNA Replication and Synthesis</h3>
+                <p>Status: Assigned</p>
+                <p style="font-size: 0.9rem; color: #70757a;">Due: Today, 11:59 PM</p>
+                <hr style="border: 0.5px solid #eee;">
+                <p>Please read the attached PDF and answer the questions on page 42.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="gaming-mode">
+        <iframe 
+            id="game-frame" 
+            src="https://playgama.com/export/game/hazmob-fps-online-shooter?clid=p_1ad7647c-3354-43b6-bd4f-94366ff31914" 
+            allow="fullscreen; pointer-lock; autoplay; accelerometer; keyboard" 
+            frameborder="0">
+        </iframe>
+    </div>
+
+    <script>
+        let isGaming = false;
+
+        function toggleMode() {
+            const school = document.getElementById('school-mode');
+            const gaming = document.getElementById('gaming-mode');
+            const frame = document.getElementById('game-frame');
+
+            if (!isGaming) {
+                // SWITCH TO GAMING
+                school.style.display = 'none';
+                gaming.style.display = 'block';
+                document.title = "Working..."; // Stealth title
+                
+                // Trigger Fullscreen for immersion
+                if (gaming.requestFullscreen) { gaming.requestFullscreen(); }
+                
+                isGaming = true;
+            } else {
+                // SWITCH TO SCHOOL (The Panic Move)
+                school.style.display = 'block';
+                gaming.style.display = 'none';
+                document.title = "Google Classroom - Dashboard";
+                
+                if (document.exitFullscreen) { document.exitFullscreen(); }
+                isGaming = false;
+            }
+        }
+
+        // HOTKEY SHORTCUT: Press 'Q' or 'ESC' to instantly switch back to School Mode
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'q' || e.key === 'Q' || e.key === 'Escape') && isGaming) {
+                toggleMode();
+            }
+        });
+
+        // Anti-Lag: Keep frame focused
+        window.addEventListener('blur', () => {
+            if(isGaming) document.getElementById('game-frame').focus();
+        });
+    </script>
+</body>
+</html>
